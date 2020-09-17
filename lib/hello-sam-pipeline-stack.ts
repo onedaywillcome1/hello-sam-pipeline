@@ -5,7 +5,7 @@ import codepipeline = require('@aws-cdk/aws-codepipeline');
 import codepipeline_actions = require('@aws-cdk/aws-codepipeline-actions');
 import codebuild = require('@aws-cdk/aws-codebuild');
 
-export const codecommitRepo = "hello-sam-app-test";
+export const codecommitRepo = "hello-sam-event";
 
 export class HelloSamPipelineStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -74,9 +74,9 @@ export class HelloSamPipelineStack extends cdk.Stack {
         new codepipeline_actions.CloudFormationCreateReplaceChangeSetAction({
           actionName: 'CreateChangeSet',
           templatePath: buildOutput.atPath("packaged.yaml"),
-          stackName: 'hello-sam-app',
+          stackName: 'hello-sam-event',
           adminPermissions: true,
-          changeSetName: 'hello-sam-app-prod-changeset',
+          changeSetName: 'hello-sam-event-prod-changeset',
           runOrder: 1
         }),
         new codepipeline_actions.ManualApprovalAction({
@@ -85,8 +85,8 @@ export class HelloSamPipelineStack extends cdk.Stack {
         }),
         new codepipeline_actions.CloudFormationExecuteChangeSetAction({
           actionName: 'Deploy',
-          stackName: 'hello-sam-app',
-          changeSetName: 'hello-sam-app-prod-changeset',
+          stackName: 'hello-sam-event',
+          changeSetName: 'hello-sam-event-prod-changeset',
           runOrder: 3
         }),
       ],
